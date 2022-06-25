@@ -1,5 +1,4 @@
 const axios = require('axios')
-const schedule = require('node-schedule')
 
 axios
     .post('https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=90f6d0f4-e7da-4cd5-b1ef-47e582b87199', {
