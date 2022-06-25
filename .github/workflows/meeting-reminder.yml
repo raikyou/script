@@ -2,7 +2,7 @@ name: meeting-reminder
 
 on:
   schedule:
-    - cron:  '55/2 15 * * *'
+    - cron:  '0 4 * * 5'
 
 jobs:
   meeting-reminder:
@@ -13,5 +13,7 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 14
-    - run: npm install
-    - run: node qyweixinbot.js
+    - run: |
+        npm install
+        npm install axios
+        node qyweixinbot.js
