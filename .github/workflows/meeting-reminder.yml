@@ -2,7 +2,7 @@ name: meeting-reminder
 
 on:
   schedule:
-    - cron:  '25 15 * * *'
+    - cron:  '35/2 15 * * *'
 
 jobs:
   meeting-reminder:
