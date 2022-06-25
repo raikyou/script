@@ -14,6 +14,7 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 14
-    - run: npm install
-    - run: npm install axios
+    - run: |
+        npm install
+        npm install axios
     - run: node qyweixinbot.js
