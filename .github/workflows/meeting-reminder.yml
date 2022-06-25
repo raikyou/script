@@ -10,5 +10,12 @@ jobs:
     name: meeting reminder
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+        
     - name: meeting reminder
-      run: node qyweixinbot.js
+      run: 
+        npm install
+        node qyweixinbot.js
