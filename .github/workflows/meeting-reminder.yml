@@ -2,21 +2,16 @@ name: meeting-reminder
 
 on:
   schedule:
-    - cron:  '35/2 15 * * *'
+    - cron:  '55/2 15 * * *'
 
 jobs:
   meeting-reminder:
     name: meeting reminder
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: 10.x
-        
-    - name: meeting reminder
-      run: |
-        npm install
-        node qyweixinbot.js
+        node-version: 14
+    - run: npm install
+    - run: node qyweixinbot.js
