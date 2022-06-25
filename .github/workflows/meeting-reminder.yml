@@ -2,10 +2,10 @@ name: meeting-reminder
 
 on:
   schedule:
-    - cron:  '0 25 10 * *'
+    - cron:  '35 10 * * *'
 
 jobs:
-  meeting reminder:
+  meeting-reminder:
     name: meeting reminder
     runs-on: ubuntu-latest
     steps:
