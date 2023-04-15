@@ -411,7 +411,7 @@ function start_menu() {
 	8)
 		dd
 		;;
-	9）
+	9)
 		aapanel
 		;;
 	11)
