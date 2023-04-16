@@ -85,9 +85,10 @@ function bbrnew() {
 #启动BBR FQ算法
 function bbrfq() {
 	remove_bbr_lotserver
-	echo "net.core.default_qdisc=fq" >>/etc/sysctl.d/99-sysctl.conf
-	echo "net.ipv4.tcp_congestion_control=bbr" >>/etc/sysctl.d/99-sysctl.conf
-	sysctl --system
+	echo "net.core.default_qdisc=fq" >>/etc/sysctl.conf
+	echo "net.ipv4.tcp_congestion_control=bbr" >>/etc/sysctl.conf
+	sysctl -p
+	lsmod | grep bbr
 	echo -e "BBR+FQ修改成功，重启生效！"
 }
 
@@ -222,7 +223,7 @@ function memorytest() {
 #Aria2 最强安装与管理脚本
 function aria() {
 	wget -O "/root/aria2.sh" "https://raw.githubusercontent.com/P3TERX/aria2.sh/master/aria2.sh" --no-check-certificate -T 30 -t 5 -d
-	chmod +x "/root/aria2.sh"	
+	chmod +x "/root/aria2.sh"
 	chmod 777 "/root/aria2.sh"
 	blue "你也可以输入 bash /root/aria2.sh 来手动运行"
 	blue "下载完成"
@@ -241,7 +242,20 @@ function mtp() {
 
 #Rclone官方一键安装脚本
 function rc() {
+	sudo apt install fuse3
 	curl https://rclone.org/install.sh | sudo bash
+	cat >/etc/systemd/system/rclone.service <<EOF
+[Unit]
+Description=Rclone
+After=network.target
+[Service]
+Type=simple
+ExecStart=/usr/bin/rclone mount NASTOOL:/media /root/downloads/media --use-mmap --umask 000 --default-permissions --file-perms 0777 --dir-perms 0777 --no-check-certificate --allow-other --allow-non-empty --dir-cache-time 15m --cache-dir=/root/cache --vfs-cache-mode full --buffer-size 200M --vfs-read-ahead 512M --vfs-read-chunk-size 32M --vfs-read-chunk-size-limit 320M --vfs-cache-max-size 10G --low-level-retries 200 --config /root/.config/rclone/rclone.conf
+[Install]
+WantedBy=multi-user.target
+EOF
+	systemctl enable rclone
+	systemctl start rclone
 }
 
 #宝塔面板综合安装脚本
@@ -343,9 +357,29 @@ dd() {
 	bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/MoeClub/Note/master/InstallNET.sh') -d 11 -v 64 -p "wasdwasd"
 }
 
-# 
+# install aapnel
 aapanel() {
 	wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh && bash install.sh aapanel
+}
+
+# ssh key login
+sshd() {
+	cat >>/etc/ssh/sshd_config <<EOF
+PubkeyAuthentication yes
+ClientAliveInterval 30
+EOF
+	systemctl restart sshd
+}
+
+# install docker & docker compose
+docker() {
+	wget -qO- get.docker.com | bash
+	tag = $(wget -qO- "https://api.github.com/repos/docker/compose/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
+	sudo curl -L "https://github.com/docker/compose/releases/download/${tag}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+	sudo chmod +x /usr/local/bin/docker-compose
+	docker compose version
+	systemctl enable docker
+	systemctl start docker
 }
 
 #主菜单
@@ -356,6 +390,8 @@ function start_menu() {
 	green " 1. IPV.SH ipv4/6优先级调整一键脚本·下载"
 	green " 2. IPT.SH iptable一键脚本"
 	green " 3. SpeedTest-Linux 下载"
+	green " 4. ssh key 登录"
+	green " 5. 安装docker和docker compose"
 	green " 6. Besttrace 路由追踪·下载"
 	green " 7. NEZHA.SH哪吒面板/探针"
 	green " 8. DD安装纯净Debian 11系统"
@@ -401,6 +437,12 @@ function start_menu() {
 		;;
 	3)
 		speedtest-linux
+		;;
+	4)
+		sshd
+		;;
+	5)
+		docker
 		;;
 	6)
 		gettrace
