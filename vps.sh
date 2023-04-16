@@ -256,6 +256,7 @@ WantedBy=multi-user.target
 EOF
 	systemctl enable rclone
 	systemctl start rclone
+	mkdir -p /root/downloads/origin /root/downloads/media
 }
 
 #宝塔面板综合安装脚本
