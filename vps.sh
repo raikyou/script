@@ -378,6 +378,19 @@ docker() {
 	sudo curl -L "https://github.com/docker/compose/releases/download/${tag}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 	sudo chmod +x /usr/local/bin/docker-compose
 	docker compose version
+	cat > /etc/docker/daemon.json <<EOF
+{
+	"log-driver": "json-file",
+	"log-opts": {
+		"max-size": "20m",
+		"max-file": "3"
+	},
+	"ipv6": true,
+	"fixed-cidr-v6": "fd00:dead:beef:c0::/80",
+	"experimental":true,
+	"ip6tables":true
+}
+EOF
 	systemctl enable docker
 	systemctl start docker
 }
