@@ -50,38 +50,6 @@ function getip() {
 	echo
 }
 
-#安装最新BBR内核·使用YUM
-function bbrnew() {
-	wget -O "/root/bbr.sh" "https://raw.githubusercontent.com/BlueSkyXN/ChangeSource/master/bbr.sh" --no-check-certificate -T 30 -t 5 -d
-	chmod +x "/root/bbr.sh"
-	chmod 777 "/root/bbr.sh"
-	blue "下载完成，开始运行"
-	bash "/root/bbr.sh"
-	blue "BBR内核安装结束，开始修复grub"
-	yum install -y grub
-	grub-mkconfig -o /boot/grub/grub.conf
-	yum install -y grub2
-	grub2-mkconfig -o /boot/grub2/grub.cfg
-	blue "修复grub完成，显示内核参数如下"
-	echo " =================================================="
-	yellow "当前正在使用的内核"
-	uname -a
-	echo " =================================================="
-	yellow "系统已经安装的全部内核"
-	rpm -qa | grep kernel
-	echo " =================================================="
-	yellow "可使用的内核列表"
-	awk -F\' '$1=="menuentry " {print i++ " : " $2}' /etc/grub2.cfg
-	echo " =================================================="
-	yellow "当前默认内核启动项"
-	echo
-	grub2-editenv list
-	echo " =================================================="
-	yellow "请自行重启后启动BBR加速"
-	echo " =================================================="
-
-}
-
 #启动BBR FQ算法
 function bbrfq() {
 	remove_bbr_lotserver
@@ -145,34 +113,6 @@ net.ipv4.tcp_max_orphans = 32768
 	fi
 }
 
-#MT.SH 流媒体解锁测试
-function mtsh() {
-	#安装JQ
-	if [ -e "/etc/redhat-release" ]; then
-		yum install epel-release -y -q >/dev/null
-		yum install jq -y -q >/dev/null
-	elif [[ $(cat /etc/os-release | grep '^ID=') =~ ubuntu ]] || [[ $(cat /etc/os-release | grep '^ID=') =~ debian ]]; then
-		apt-get update -y >/dev/null
-		apt-get install jq >/dev/null
-	else
-		echo -e "${Font_Red}请手动安装jq${Font_Suffix}"
-		exit
-	fi
-
-	jq -V >/dev/null 2>&1
-	if [ $? -ne 0 ]; then
-		echo -e "${Font_Red}请手动安装jq${Font_Suffix}"
-		exit
-	fi
-
-	wget -O "/root/mt.sh" "https://raw.githubusercontent.com/BlueSkyXN/ChangeSource/master/mt.sh" --no-check-certificate -T 30 -t 5 -d
-	chmod +x "/root/mt.sh"
-	chmod 777 "/root/mt.sh"
-	blue "下载完成"
-	blue "你也可以输入 bash /root/mt.sh 来手动运行"
-	bash /root/mt.sh
-}
-
 #Besttrace 路由追踪·下载
 function gettrace() {
 	wget -O "/root/besttrace" "https://raw.githubusercontent.com/BlueSkyXN/ChangeSource/master/besttrace" --no-check-certificate -T 30 -t 5 -d
@@ -182,19 +122,6 @@ function gettrace() {
 	blue "输入 /root/besttrace 来运行"
 }
 
-#Lemonbench 综合测试
-function Lemonbench() {
-	curl -fsL https://ilemonra.in/LemonBenchIntl | bash -s fast
-}
-
-#UNIXbench 综合测试
-function UNIXbench() {
-	wget -O "/root/unixbench.sh" "https://raw.githubusercontent.com/BlueSkyXN/ChangeSource/master/unixbench.sh" --no-check-certificate -T 30 -t 5 -d
-	chmod +x "/root/unixbench.sh"
-	chmod 777 "/root/unixbench.sh"
-	blue "下载完成"
-	bash "/root/unixbench.sh"
-}
 
 #三网Speedtest测速
 function 3speed() {
@@ -210,16 +137,6 @@ function superbench() {
 	bash "/root/superbench.sh"
 }
 
-#Memorytest 内存压力测试
-function memorytest() {
-	yum install wget -y
-	yum groupinstall "Development Tools" -y
-	wget https://raw.githubusercontent.com/FunctionClub/Memtester/master/memtester.cpp
-	blue "下载完成"
-	gcc -l stdc++ memtester.cpp
-	./a.out
-}
-
 #Aria2 最强安装与管理脚本
 function aria() {
 	wget -O "/root/aria2.sh" "https://raw.githubusercontent.com/P3TERX/aria2.sh/master/aria2.sh" --no-check-certificate -T 30 -t 5 -d
@@ -230,20 +147,11 @@ function aria() {
 	bash "/root/aria2.sh"
 }
 
-#MTP&TLS 一键脚本
-function mtp() {
-	wget -O "/root/mtp.sh" "https://raw.githubusercontent.com/sunpma/mtp/master/mtproxy.sh" --no-check-certificate -T 30 -t 5 -d
-	chmod +x "/root/mtp.sh"
-	chmod 777 "/root/mtp.sh"
-	blue "你也可以输入 bash /root/mtp.sh 来手动运行"
-	blue "下载完成"
-	bash "/root/mtp.sh"
-}
-
-#Rclone官方一键安装脚本
+#Rclone官方安装&开机自启动
 function rc() {
 	sudo apt install fuse3
 	curl https://rclone.org/install.sh | sudo bash
+	mkdir -p /root/downloads/origin /root/downloads/media
 	cat >/etc/systemd/system/rclone.service <<EOF
 [Unit]
 Description=Rclone
@@ -256,41 +164,6 @@ WantedBy=multi-user.target
 EOF
 	systemctl enable rclone
 	systemctl start rclone
-	mkdir -p /root/downloads/origin /root/downloads/media
-}
-
-#宝塔面板综合安装脚本
-function btbox() {
-	wget -O "/root/btbox.sh" "https://raw.githubusercontent.com/BlueSkyXN/SKY-BOX/main/btbox.sh" --no-check-certificate -T 30 -t 5 -d
-	chmod +x "/root/btbox.sh"
-	chmod 777 "/root/btbox.sh"
-	blue "下载完成"
-	bash "/root/btbox.sh"
-}
-
-#宝塔面板 自动磁盘挂载工具
-function btdisk() {
-	wget -O auto_disk.sh http://download.bt.cn/tools/auto_disk.sh && bash auto_disk.sh
-}
-
-#Git 新版 安装
-function yumgitsh() {
-	wget -O "/root/yum-git.sh" "https://raw.githubusercontent.com/BlueSkyXN/Yum-Git/main/yum-git.sh" --no-check-certificate -T 30 -t 5 -d
-	chmod +x "/root/yum-git.sh"
-	chmod 777 "/root/yum-git.sh"
-	blue "下载完成"
-	blue "你也可以输入 bash /root/yum-git.sh 来手动运行"
-	bash "/root/yum-git.sh"
-}
-
-#BBR一键管理脚本
-function tcpsh() {
-	wget -O "/root/tcp.sh" "https://raw.githubusercontent.com/BlueSkyXN/ChangeSource/master/tcp.sh" --no-check-certificate -T 30 -t 5 -d
-	chmod +x "/root/tcp.sh"
-	chmod 777 "/root/tcp.sh"
-	blue "下载完成"
-	blue "你也可以输入 bash /root/tcp.sh 来手动运行"
-	bash "/root/tcp.sh"
 }
 
 #SWAP一键安装/卸载脚本
@@ -311,15 +184,6 @@ function rtsh() {
 	blue "下载完成"
 	blue "你也可以输入 bash /root/rt.sh 来手动运行"
 	bash "/root/rt.sh"
-}
-
-#Yabs.sh测试
-function yabssh() {
-	wget -O "/root/yabs.sh" "https://raw.githubusercontent.com/BlueSkyXN/ChangeSource/master/yabs.sh" --no-check-certificate -T 30 -t 5 -d
-	chmod +x "/root/yabs.sh"
-	chmod 777 "/root/yabs.sh"
-	blue "下载完成"
-	bash "/root/yabs.sh"
 }
 
 #Disk Test 硬盘&系统综合测试
@@ -346,25 +210,13 @@ function RegionRestrictionCheck() {
 	bash <(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/check.sh)
 }
 
-#F2B一键安装脚本
-function f2bsh() {
-	red "卸载请 运行 wget https://raw.githubusercontent.com/FunctionClub/Fail2ban/master/uninstall.sh && bash uninstall.sh"
-	wget https://raw.githubusercontent.com/FunctionClub/Fail2ban/master/fail2ban.sh && bash fail2ban.sh 2>&1 | tee fail2ban.log
-	red "卸载请 运行 wget https://raw.githubusercontent.com/FunctionClub/Fail2ban/master/uninstall.sh && bash uninstall.sh"
-}
-
 # DD 安装纯净 Debian11 系统，支持debian -d 9，10，11系统；ubuntu -u 20.04
-dd() {
+function dd() {
 	bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/MoeClub/Note/master/InstallNET.sh') -d 11 -v 64 -p "wasdwasd"
 }
 
-# install aapnel
-aapanel() {
-	wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh && bash install.sh aapanel
-}
-
-# ssh key login
-sshd() {
+# ssh login
+function sshd() {
 	cat >>/etc/ssh/sshd_config <<EOF
 PubkeyAuthentication yes
 ClientAliveInterval 30
@@ -373,7 +225,7 @@ EOF
 }
 
 # install docker & docker compose
-docker() {
+function docker() {
 	wget -qO- get.docker.com | bash
 	tag = $(wget -qO- "https://api.github.com/repos/docker/compose/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
 	sudo curl -L "https://github.com/docker/compose/releases/download/${tag}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -401,146 +253,100 @@ function start_menu() {
 	clear
 	red "wget -O box.sh https://raw.githubusercontent.com/BlueSkyXN/SKY-BOX/main/box.sh && chmod +x box.sh && clear && ./box.sh "
 	yellow " =================================================="
-	green " 1. IPV.SH ipv4/6优先级调整一键脚本·下载"
-	green " 2. IPT.SH iptable一键脚本"
-	green " 3. SpeedTest-Linux 下载"
-	green " 4. ssh key 登录"
-	green " 5. 安装docker和docker compose"
-	green " 6. Besttrace 路由追踪·下载"
-	green " 7. NEZHA.SH哪吒面板/探针"
-	green " 8. DD安装纯净Debian 11系统"
-	green " 9. aapanel面板"
+	green " 1. DD安装纯净Debian 11系统"
+	green " 2. ssh登录&30min不活跃连接"
+	green " 3. 启动BBR FQ算法"
+	green " 4. SWAP一键安装/卸载脚本"
+	green " 5. IPV.SH ipv4/6优先级调整一键脚本·下载"
+	green " 6. IPT.SH iptable一键脚本"
+	green " 7. 系统网络配置优化"
+	green " 8. 获取本机IP"
 	yellow " --------------------------------------------------"
-	green " 11. 获取本机IP"
-	green " 12. 安装最新BBR内核·使用YUM·仅支持CentOS"
-	green " 13. 启动BBR FQ算法"
-	green " 14. 系统网络配置优化"
-	green " 15. Git 新版 安装·仅支持CentOS"
-	green " 16. 宝塔面板 自动磁盘挂载工具"
-	green " 17. BBR一键管理脚本"
-	green " 18. SWAP一键安装/卸载脚本"
-	green " 19. F2B一键安装脚本"
+	green " 11. 安装docker和docker compose"
+	green " 12. Rclone官方安装&开启启动"
+	green " 13. Aria2 最强安装与管理脚本"
+	green " 14. NEZHA.SH哪吒面板/探针"
 	yellow " --------------------------------------------------"
 	green " 21. Superbench 综合测试"
-	green " 22. MT.SH 流媒体解锁测试"
-	green " 23. Lemonbench 综合测试"
-	green " 24. UNIXbench 综合测试"
-	green " 25. 三网Speedtest测速"
-	green " 26. Memorytest 内存压力测试"
-	green " 27. Route-trace 路由追踪测试"
-	green " 28. YABS LINUX综合测试"
+	green " 22. UNIXbench 综合测试"
+	green " 23. SpeedTest-Linux 下载"
+	green " 24. 三网Speedtest测速"
+	green " 25. Besttrace 路由追踪·下载"
+	green " 26. Route-trace 路由追踪测试"
+	green " 27.TubeCheck Google/Youtube CDN分配节点测试"
+	green " 28. Memorytest 内存压力测试"
 	green " 29. Disk Test 硬盘&系统综合测试"
-	green " 210.TubeCheck Google/Youtube CDN分配节点测试"
-	green " 211.RegionRestrictionCheck 流媒体解锁测试"
-	yellow " --------------------------------------------------"
-	green " 31. MTP&TLS 一键脚本"
-	green " 32. Rclone官方一键安装脚本"
-	green " 33. Aria2 最强安装与管理脚本"
-	yellow " --------------------------------------------------"
-	green " 00. 宝塔面板综合安装脚本"
+	green " 30.RegionRestrictionCheck 流媒体解锁测试"
 	yellow " =================================================="
 	green " 0. 退出脚本"
 	echo
 	read -p "请输入数字:" menuNumberInput
 	case "$menuNumberInput" in
 	1)
-		ipvsh
-		;;
-	2)
-		iptsh
-		;;
-	3)
-		speedtest-linux
-		;;
-	4)
-		sshd
-		;;
-	5)
-		docker
-		;;
-	6)
-		gettrace
-		;;
-	7)
-		nezha
-		;;
-	8)
 		dd
 		;;
-	9)
-		aapanel
+	2)
+		sshd
 		;;
-	11)
-		getip
-		;;
-	12)
-		bbrnew
-		;;
-	13)
+	3)
 		bbrfq
 		;;
-	14)
-		system-best
-		;;
-	15)
-		yumgitsh
-		;;
-	16)
-		btdisk
-		;;
-	17)
-		tcpsh
-		;;
-	18)
+	4)
 		swapsh
 		;;
-	19)
-		f2bsh
+	5)
+		ipvsh
+		;;
+	6)
+		iptsh
+		;;
+	7)
+		system-best
+		;;
+	8)
+		getip
+		;;
+	11)
+		docker
+		;;
+	12)
+		rc
+		;;
+	13)
+		aria
+		;;
+	14)
+		nezha
 		;;
 	21)
 		superbench
 		;;
 	22)
-		mtsh
-		;;
-	23)
-		Lemonbench
-		;;
-	24)
 		UNIXbench
 		;;
-	25)
+	23)
+		speedtest-linux
+		;;
+	24)
 		3speed
 		;;
-	26)
-		memorytest
+	25)
+		gettrace
 		;;
-	27)
+	26)
 		rtsh
 		;;
+	27)
+		tubecheck
+		;;
 	28)
-		yabssh
+		memorytest
 		;;
 	29)
 		disktestsh
 		;;
-	210)
-		tubecheck
-		;;
-	211)
+	30)
 		RegionRestrictionCheck
-		;;
-	31)
-		mtp
-		;;
-	32)
-		rc
-		;;
-	33)
-		aria
-		;;
-	00)
-		btbox
 		;;
 	0)
 		exit 1
