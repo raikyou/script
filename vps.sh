@@ -248,6 +248,11 @@ EOF
 	systemctl start docker
 }
 
+# install warf
+function warf() {
+	wget -N https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh && bash menu.sh
+}
+
 #主菜单
 function start_menu() {
 	clear
@@ -261,6 +266,7 @@ function start_menu() {
 	green " 6. IPT.SH iptable一键脚本"
 	green " 7. 系统网络配置优化"
 	green " 8. 获取本机IP"
+	green " 9. warf安装"
 	yellow " --------------------------------------------------"
 	green " 11. 安装docker和docker compose"
 	green " 12. Rclone官方安装&开启启动"
@@ -305,6 +311,9 @@ function start_menu() {
 		;;
 	8)
 		getip
+		;;
+	9）
+		warf
 		;;
 	11)
 		docker
