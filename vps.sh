@@ -312,7 +312,7 @@ function start_menu() {
 	8)
 		getip
 		;;
-	9）
+	9)
 		warf
 		;;
 	11)
