@@ -226,6 +226,7 @@ function sshd() {
 
 # install docker & docker compose
 function docker() {
+	locale-gen en_US.UTF-8
 	wget -qO- get.docker.com | bash
 	tag = $(wget -qO- "https://api.github.com/repos/docker/compose/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
 	sudo curl -L "https://github.com/docker/compose/releases/download/${tag}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
