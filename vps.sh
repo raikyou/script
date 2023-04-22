@@ -217,10 +217,10 @@ function dd() {
 
 # ssh login
 function sshd() {
-	cat >>/etc/ssh/sshd_config <<EOF
-PubkeyAuthentication yes
-ClientAliveInterval 30
-EOF
+	sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
+	sed -i 's/^#\?PubkeyAuthentication.*/PubkeyAuthentication yes/g' /etc/ssh/sshd_config
+	sed -i 's/^#\?ClientAliveInterval.*/ClientAliveInterval 1/g' /etc/ssh/sshd_config
+	sed -i 's/^#\?ClientAliveCountMax.*/ClientAliveCountMax 30/g' /etc/ssh/sshd_config
 	systemctl restart sshd
 }
 
