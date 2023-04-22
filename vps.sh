@@ -212,7 +212,7 @@ function RegionRestrictionCheck() {
 
 # DD 安装纯净 Debian11 系统，支持debian -d 9，10，11系统；ubuntu -u 20.04
 function dd() {
-	bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/MoeClub/Note/master/InstallNET.sh') -d 11 -v 64 -p "wasdwasd"
+	bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/MoeClub/Note/master/InstallNET.sh') -d 11 -v 64 -p "wasd"
 }
 
 # ssh login
