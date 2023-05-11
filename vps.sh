@@ -158,7 +158,7 @@ Description=Rclone
 After=network.target
 [Service]
 Type=simple
-ExecStart=/usr/bin/rclone mount NASTOOL:/media /root/downloads/media --use-mmap --umask 000 --default-permissions --file-perms 0777 --dir-perms 0777 --no-check-certificate --allow-other --allow-non-empty --dir-cache-time 15m --cache-dir=/root/cache --vfs-cache-mode full --buffer-size 200M --vfs-read-ahead 512M --vfs-read-chunk-size 32M --vfs-read-chunk-size-limit 320M --vfs-cache-max-size 10G --low-level-retries 200 --config /root/.config/rclone/rclone.conf
+ExecStart=/usr/bin/rclone mount onedrive:/media /root/downloads/media --use-mmap --umask 000 --default-permissions --file-perms 0777 --dir-perms 0777 --no-check-certificate --allow-other --allow-non-empty --dir-cache-time 15m --cache-dir=/root/cache --vfs-cache-mode full --buffer-size 200M --vfs-read-ahead 512M --vfs-read-chunk-size 32M --vfs-read-chunk-size-limit 320M --vfs-cache-max-size 10G --low-level-retries 200 --config /root/.config/rclone/rclone.conf
 [Install]
 WantedBy=multi-user.target
 EOF
