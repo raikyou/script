@@ -218,6 +218,7 @@ function dd() {
 # ssh login
 function sshd() {
 	sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
+	sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/g' /etc/ssh/sshd_config
 	sed -i 's/^#\?PubkeyAuthentication.*/PubkeyAuthentication yes/g' /etc/ssh/sshd_config
 	sed -i 's/^#\?ClientAliveInterval.*/ClientAliveInterval 1/g' /etc/ssh/sshd_config
 	sed -i 's/^#\?ClientAliveCountMax.*/ClientAliveCountMax 30/g' /etc/ssh/sshd_config
