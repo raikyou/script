@@ -155,10 +155,17 @@ function rc() {
 	cat >/etc/systemd/system/rclone.service <<EOF
 [Unit]
 Description=Rclone
-After=network.target
+After=network-online.target
 [Service]
 Type=simple
-ExecStart=/usr/bin/rclone mount onedrive:/media /root/downloads/media --use-mmap --umask 000 --default-permissions --file-perms 0777 --dir-perms 0777 --no-check-certificate --allow-other --allow-non-empty --dir-cache-time 15m --cache-dir=/root/cache --vfs-cache-mode full --buffer-size 200M --vfs-read-ahead 512M --vfs-read-chunk-size 32M --vfs-read-chunk-size-limit 320M --vfs-cache-max-size 10G --low-level-retries 200 --config /root/.config/rclone/rclone.conf
+ExecStart=/usr/bin/rclone mount odchunk:/media /root/downloads/media \
+--umask 000 --no-check-certificate --allow-other --allow-non-empty \
+--transfers 1 --buffer-size 32M --low-level-retries 200 \
+--vfs-cache-mode full --vfs-cache-max-age 12h --vfs-cache-max-size 5G --vfs-read-chunk-size 128M --vfs-read-chunk-size-limit 1G --dir-cache-time 12h \
+--cache-dir=/root/cache \
+--config /root/.config/rclone/rclone.conf
+ExecStop=fusermount -qzu /root/downloads/media
+Restart=on-abort
 [Install]
 WantedBy=multi-user.target
 EOF
