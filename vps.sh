@@ -169,6 +169,21 @@ Restart=on-abort
 [Install]
 WantedBy=multi-user.target
 EOF
+	cat >~/.config/rclone/rclone.conf <<EOF
+[onedrive]
+type = webdav
+url = https://cqueducn0-my.sharepoint.com/personal/20126826_cqu_edu_cn/Documents
+vendor = sharepoint
+user = 20126826@cqu.edu.cn
+pass = password
+
+[odchunk]
+type = chunker
+remote = onedrive:
+chunk_size = 1.990Gi
+
+
+EOF
 	systemctl enable rclone
 	systemctl start rclone
 }
