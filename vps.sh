@@ -181,8 +181,6 @@ pass = password
 type = chunker
 remote = onedrive:
 chunk_size = 1.990Gi
-
-
 EOF
 	systemctl enable rclone
 	systemctl start rclone
@@ -276,6 +274,17 @@ function warf() {
 	wget -N https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh && bash menu.sh
 }
 
+# 数据备份
+function backup() {
+	cat >~/backup.sh <<EOF
+tar -zcf ~/backup.tar.gz ~/docker
+rclone sync backup.tar.gz onedrive:backup
+rm ~/backup.tar.gz
+EOF
+	chmod +x backup.sh
+ 	echo “0 2 0 0 0 ～/backup.sh” >>/etc/crontab
+}
+
 #主菜单
 function start_menu() {
 	clear
@@ -295,6 +304,7 @@ function start_menu() {
 	green " 12. Rclone官方安装&开启启动"
 	green " 13. Aria2 最强安装与管理脚本"
 	green " 14. NEZHA.SH哪吒面板/探针"
+ 	green " 15. 数据备份"
 	yellow " --------------------------------------------------"
 	green " 21. Superbench 综合测试"
 	green " 22. UNIXbench 综合测试"
