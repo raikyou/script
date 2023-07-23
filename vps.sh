@@ -282,7 +282,7 @@ rclone sync backup.tar.gz onedrive:backup
 rm ~/backup.tar.gz
 EOF
 	chmod +x backup.sh
- 	echo 0 2 * * 0 ~/backup.sh >>/etc/crontab
+ 	echo 0 2 * * 0 root ~/backup.sh >>/etc/crontab
 }
 
 #主菜单
