@@ -169,7 +169,8 @@ Restart=on-abort
 [Install]
 WantedBy=multi-user.target
 EOF
-	cat >~/.config/rclone/rclone.conf <<EOF
+	mkdir -p ~/.config/rclone
+	cat > ~/.config/rclone/rclone.conf <<EOF
 [onedrive]
 type = webdav
 url = https://cqueducn0-my.sharepoint.com/personal/20126826_cqu_edu_cn/Documents
