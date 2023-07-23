@@ -360,9 +360,9 @@ function start_menu() {
 	14)
 		nezha
 		;;
-  	15）	
-   		backup
-   		;;
+	15)
+		backup
+		;;
 	21)
 		superbench
 		;;
