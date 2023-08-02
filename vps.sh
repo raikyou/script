@@ -278,9 +278,12 @@ function warf() {
 # 数据备份
 function backup() {
 	cat >~/backup.sh <<EOF
-tar -zcf ~/backup.tar.gz ~/docker
-rclone sync backup.tar.gz onedrive:backup
-rm ~/backup.tar.gz
+#!/bin/bash
+
+backup_filename="$HOME/$(hostname)_backup.tar.gz"
+tar -czf "${backup_filename}" ~/docker
+rclone copy --update "${backup_filename}" onedrive:backup
+rm "${backup_filename}"
 EOF
 	chmod +x backup.sh
  	echo 0 2 * * 0 root ~/backup.sh >>/etc/crontab
