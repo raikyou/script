@@ -281,7 +281,7 @@ function backup() {
 #!/bin/bash
 
 backup_filename="$HOME/$(hostname)_backup.tar.gz"
-tar -czf "${backup_filename}" ~/docker
+tar -czf "${backup_filename}" ~/data
 rclone copy --update "${backup_filename}" onedrive:backup
 rm "${backup_filename}"
 EOF
