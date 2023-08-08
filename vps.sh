@@ -307,7 +307,7 @@ Type=simple
 User=root
 Group=root
 WorkingDirectory=/root
-ExecStart=/usr/bin/python3 /root/client-linux.py SERVER=raikyou.online USER=admin PASSWORD=wasd
+ExecStart=/usr/bin/python3 /root/client-linux.py SERVER=raikyou.online USER=%H PASSWORD=wasd
 Restart=always
 #Environment=DEBUG=true
 
