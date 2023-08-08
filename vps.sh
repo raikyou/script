@@ -280,13 +280,50 @@ function backup() {
 	cat >~/backup.sh <<EOF
 #!/bin/bash
 
-backup_filename="$HOME/$(hostname)_backup.tar.gz"
+backup_filename="$HOME/$(hostname)_backup_$(date +"%Y%m%d_%H%M%S").tar.gz"
 tar -czf "${backup_filename}" ~/data
 rclone copy --update "${backup_filename}" onedrive:backup
 rm "${backup_filename}"
 EOF
 	chmod +x backup.sh
  	echo 0 2 * * 0 root ~/backup.sh >>/etc/crontab
+}
+
+function sss-agent() {
+	wget --no-check-certificate -qO /root/client-linux.py 'https://raw.githubusercontent.com/cppla/ServerStatus/master/clients/client-linux.py'
+	cat > /etc/systemd/system/sss-agent.service <<EOF
+[Unit]
+Description=Server Status Agent
+After=syslog.target
+
+[Service]
+# Modify these two values and uncomment them if you have
+# repos with lots of files and get an HTTP error 500 because
+# of that
+###
+#LimitMEMLOCK=infinity
+#LimitNOFILE=65535
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/root
+ExecStart=/usr/bin/python3 /root/client-linux.py SERVER=raikyou.online USER=admin PASSWORD=wasd
+Restart=always
+#Environment=DEBUG=true
+
+# Some distributions may not support these hardening directives. If you cannot start the service due
+# to an unknown option, comment out the ones not supported by your version of systemd.
+#ProtectSystem=full
+#PrivateDevices=yes
+#PrivateTmp=yes
+#NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
+	systemctl daemon-reload
+	systemctl enable sss-agent
+	systemctl restart sss-agent
 }
 
 #主菜单
@@ -303,6 +340,7 @@ function start_menu() {
 	green " 7. 系统网络配置优化"
 	green " 8. 获取本机IP"
 	green " 9. warf安装"
+ 	green " 10. serverStatus探针客户端自启动脚本"
 	yellow " --------------------------------------------------"
 	green " 11. 安装docker和docker compose"
 	green " 12. Rclone官方安装&开启启动"
@@ -352,6 +390,9 @@ function start_menu() {
 	9)
 		warf
 		;;
+  	10)
+		sss-agent
+     		;;
 	11)
 		docker
 		;;
