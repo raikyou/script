@@ -280,10 +280,9 @@ function backup() {
 	cat > /root/backup.sh <<EOF
 #!/bin/bash
 
-backup_filename="$HOME/$(hostname)_backup_$(date +"%Y%m%d_%H%M%S").tar.gz"
-tar -czf "${backup_filename}" ~/data
-rclone copy --update "${backup_filename}" onedrive:backup
-rm "${backup_filename}"
+backup_filename="\$HOME/\$(hostname)_backup_\$(date +\"%Y%m%d_%H%M%S\").tar.gz"
+tar -czf "\${backup_filename}" -C / root/data
+rclone move --update "\${backup_filename}" onedrive:backup
 EOF
 	chmod +x /root/backup.sh
  	echo 0 2 * * 0 root /root/backup.sh >>/etc/crontab
