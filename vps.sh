@@ -285,7 +285,8 @@ tar -czf "\${backup_filename}" -C / root/data
 rclone move --update "\${backup_filename}" onedrive:backup
 EOF
 	chmod +x /root/backup.sh
- 	echo 0 2 * * 0 root /root/backup.sh >>/etc/crontab
+  	echo '0 2 * * * /bin/bash /root/backup.sh' | crontab -
+
 }
 
 function sss-agent() {
