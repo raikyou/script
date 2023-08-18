@@ -277,7 +277,7 @@ function warf() {
 
 # 数据备份
 function backup() {
-	cat >/root/backup.sh <<EOF
+	cat > /root/backup.sh <<EOF
 #!/bin/bash
 
 backup_filename="$HOME/$(hostname)_backup_$(date +"%Y%m%d_%H%M%S").tar.gz"
@@ -285,8 +285,8 @@ tar -czf "${backup_filename}" ~/data
 rclone copy --update "${backup_filename}" onedrive:backup
 rm "${backup_filename}"
 EOF
-	chmod +x backup.sh
- 	echo 0 2 * * 0 root ~/backup.sh >>/etc/crontab
+	chmod +x /root/backup.sh
+ 	echo 0 2 * * 0 root /root/backup.sh >>/etc/crontab
 }
 
 function sss-agent() {
