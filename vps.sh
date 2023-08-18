@@ -277,7 +277,7 @@ function warf() {
 
 # 数据备份
 function backup() {
-	cat >~/backup.sh <<EOF
+	cat >/root/backup.sh <<EOF
 #!/bin/bash
 
 backup_filename="$HOME/$(hostname)_backup_$(date +"%Y%m%d_%H%M%S").tar.gz"
