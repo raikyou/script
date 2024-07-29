@@ -2,14 +2,11 @@
   "version": 1,
   "rules": [
     {
-      "domain": [
-      ],
       "domain_suffix":[
         "eu.org",
         "202413.xyz",
         "cnlonely.top"
-      ],
-      "domain_keyword": ""
+      ]
     }
   ]
 }
